@@ -9,7 +9,7 @@ app.get("/api", getAPI);
 app.get("/api/topics", getTopics);
 
 app.get("/api/*", (request, response) => {
-  response.status(404).send({ msg: "Error - Invalid Path!" });
+  response.status(404).send({ msg: "Error(404) - Invalid Path!" });
 });
 
 module.exports = app;

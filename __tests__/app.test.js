@@ -46,12 +46,14 @@ describe("API", () => {
     });
   });
   //404 Error Path
-  it.skip("404: GET responds with error - Invalid Path!", () => {
-    return request(app)
-      .get("./api/invalidPath")
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("Error - Invalid Path!");
-      });
+  describe("Error Invalid Path", () => {
+    it("404: GET responds with error - Invalid Path!", () => {
+      return request(app)
+        .get("/api/invalidPath")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Error(404) - Invalid Path!");
+        });
+    });
   });
 }); //End Describe bracket Root
