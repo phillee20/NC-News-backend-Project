@@ -1,0 +1,18 @@
+const { fetchTopics } = require("./models");
+
+const getAPI = (request, response) => {
+  return response.status(200).send({ msg: "We have connected successfully" });
+};
+
+const getTopics = (request, response) => {
+  fetchTopics()
+    .then((topics) => {
+      //console.log(topics);
+      return response.status(200).send({ topics });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getAPI, getTopics };
