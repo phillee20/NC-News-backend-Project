@@ -9,7 +9,12 @@ const {
   handle404nonExistentPaths,
 } = require("../errorController");
 
-const { getAPI, getTopics, getAllArticles } = require("../appController");
+const {
+  getAPI,
+  getTopics,
+  getAllArticles,
+  getArticleID,
+} = require("../appController");
 
 app.get("/api", getAPI);
 
@@ -17,14 +22,12 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getAllArticles);
 
-//ERROR HANDLING
-app.get("/api/*", (request, response) => {
-  response.status(404).send({ msg: "Error(404) - Invalid Path!" });
-});
+app.get("/api/articles/:article_id", getArticleID);
 
-app.use(handle404nonExistentPaths);
-app.use(handleServerErrors);
-app.use(handlePsqlErrors);
+//ERROR HANDLING
+app.all("/api/*", handle404nonExistentPaths);
 app.use(handleCustomErrors);
+app.use(handlePsqlErrors);
+app.use(handleServerErrors);
 
 module.exports = app;

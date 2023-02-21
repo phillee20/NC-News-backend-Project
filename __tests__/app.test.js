@@ -46,7 +46,8 @@ describe("API", () => {
         });
     });
   });
-  //404 Error Path
+
+  //404 ERROR PATH
   describe("Error Invalid Path", () => {
     it("404: GET responds with error - Invalid Path!", () => {
       return request(app)
@@ -58,14 +59,14 @@ describe("API", () => {
     });
   });
 
-  //GET /API/ARTICLES
+  //GET /API/ALL ARTICLES
   describe("GET/api/articles - Display Array of article objects", () => {
     it("200: GET responds with an array of article objects, each of which to have appropriate properties", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
         .then(({ body }) => {
-          console.log(body);
+          //console.log(body);
           expect(body.articles).toBeInstanceOf(Array);
           expect(body.articles).toHaveLength(12);
           expect(body.articles).toBeSortedBy("created_at", {
@@ -86,4 +87,51 @@ describe("API", () => {
         });
     });
   });
-}); //End Describe bracket Root
+
+  //GET ARTICLE BY ID - Includes comment count
+  describe("Get /api/articles/:article_id", () => {
+    it("200: should respond with the specified article object", () => {
+      return request(app)
+        .get("/api/articles/5")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles).toEqual(
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              topic: expect.any(String),
+              votes: expect.any(Number),
+              title: expect.any(String),
+              body: expect.any(String),
+              article_id: expect.any(Number),
+              comment_count: expect.any(String),
+              created_at: expect.any(String),
+              article_img_url: expect.any(String),
+            })
+          );
+        });
+    });
+  });
+
+  //ERROR 404 WHEN GIVEN NON EXISTENT ID
+  describe("Tests for Sad Path Article ID", () => {
+    it("404: should return a message saying ID not found when given an ID that does not exist in the data set", () => {
+      return request(app)
+        .get("/api/articles/103")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("ID not found!");
+        });
+    });
+
+    //ERROR 400 WHEN GIVEN INVALID ARTICLE_ID
+    it("400: should return a message saying invalid Input when given an invalid ID", () => {
+      return request(app)
+        .get("/api/articles/doritos")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("400: Invalid Input!");
+        });
+    });
+  });
+}); //End Describe API bracket
