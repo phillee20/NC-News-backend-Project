@@ -9,13 +9,20 @@ const {
   handle404nonExistentPaths,
 } = require("../errorController");
 
-const { getAPI, getTopics, getAllArticles } = require("../appController");
+const {
+  getAPI,
+  getTopics,
+  getAllArticles,
+  getArticleID,
+} = require("../appController");
 
 app.get("/api", getAPI);
 
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getAllArticles);
+
+app.get("/api/articles/:article_id", getArticleID);
 
 //ERROR HANDLING
 app.get("/api/*", (request, response) => {

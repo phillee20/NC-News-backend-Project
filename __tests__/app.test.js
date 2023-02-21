@@ -46,6 +46,7 @@ describe("API", () => {
         });
     });
   });
+
   //404 Error Path
   describe("Error Invalid Path", () => {
     it("404: GET responds with error - Invalid Path!", () => {
@@ -65,7 +66,7 @@ describe("API", () => {
         .get("/api/articles")
         .expect(200)
         .then(({ body }) => {
-          console.log(body);
+          //console.log(body);
           expect(body.articles).toBeInstanceOf(Array);
           expect(body.articles).toHaveLength(12);
           expect(body.articles).toBeSortedBy("created_at", {
@@ -86,4 +87,29 @@ describe("API", () => {
         });
     });
   });
-}); //End Describe bracket Root
+
+  //GET ARTICLE BY ID
+  describe("Get /api/articles/:article_id", () => {
+    it("200: should respond with the specified article object", () => {
+      return request(app)
+        .get("/api/articles/5")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles).toEqual(
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              topic: expect.any(String),
+              votes: expect.any(Number),
+              title: expect.any(String),
+              body: expect.any(String),
+              article_id: expect.any(Number),
+              comment_count: expect.any(String),
+              created_at: expect.any(String),
+              article_img_url: expect.any(String),
+            })
+          );
+        });
+    });
+  });
+}); //End Describe API bracket Root
