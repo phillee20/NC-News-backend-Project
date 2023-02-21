@@ -1,10 +1,15 @@
-const { fetchTopics } = require("./models");
+const { fetchTopics, fetchAllArticles } = require("./models");
 
 const getAPI = (request, response) => {
-  return response.status(200).send({ msg: "We have connected successfully" });
+  return response
+    .status(200)
+    .send({ msg: "We have connected successfully" })
+    .catch((err) => {
+      next(err);
+    });
 };
 
-const getTopics = (request, response) => {
+const getTopics = (request, response, next) => {
   fetchTopics()
     .then((topics) => {
       //console.log(topics);
@@ -15,4 +20,15 @@ const getTopics = (request, response) => {
     });
 };
 
-module.exports = { getAPI, getTopics };
+const getAllArticles = (request, response, next) => {
+  fetchAllArticles()
+    .then((allArticle) => {
+      response.status(200).send({ articles: allArticle });
+      console.log(allArticle);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getAPI, getTopics, getAllArticles };

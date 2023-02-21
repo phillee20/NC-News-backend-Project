@@ -1,0 +1,27 @@
+const handle404nonExistentPaths = (request, response, next) => {
+  response.status(404).send({ msg: "Path not found!!" });
+};
+
+const handleCustomErrors = (error, response, request, next) => {
+  if (error.status && error.msg) {
+    response.status(error.status).send({ msg: `${error.msg}` });
+  } else next(error);
+};
+
+const handlePsqlErrors = (error, response, request, next) => {
+  if (error.code === "22P02") {
+    response.status(400).send({ msg: "400: Invalid input!!" });
+  } else next(error);
+};
+
+const handleServerErrors = (error, response, request, next) => {
+  console.log(error);
+  response.status(500).send({ msg: "500 - Internal Server Error!!" });
+};
+
+module.exports = {
+  handleServerErrors,
+  handlePsqlErrors,
+  handleCustomErrors,
+  handle404nonExistentPaths,
+};
