@@ -17,7 +17,6 @@ const fetchAllArticles = () => {
 `;
 
   return db.query(strQuery).then((arrayArticles) => {
-    //console.log(arrayArticles.rows);
     return arrayArticles.rows;
   });
 };
@@ -36,11 +35,10 @@ const fetchArticleByID = (article_id) => {
       [article_id]
     )
     .then((result) => {
-      //console.log(result.rows.length);
       if (result.rows.length === 0) {
         return Promise.reject({ status: 404, msg: "ID not found!" });
       }
-      return result.rows[0]; //else return rows[0];
+      return result.rows[0];
     });
 };
 
