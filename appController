@@ -36,9 +36,10 @@ const getArticleID = (request, response, next) => {
   fetchArticleByID(article_id)
     .then((result) => {
       response.status(200).send({ articles: result });
-      console.log(result);
+      //console.log(result);
     })
     .catch((error) => {
+      //console.log(error);
       next(error);
     });
 };

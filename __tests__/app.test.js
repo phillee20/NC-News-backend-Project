@@ -47,7 +47,7 @@ describe("API", () => {
     });
   });
 
-  //404 Error Path
+  //404 ERROR PATH
   describe("Error Invalid Path", () => {
     it("404: GET responds with error - Invalid Path!", () => {
       return request(app)
@@ -59,7 +59,7 @@ describe("API", () => {
     });
   });
 
-  //GET /API/ARTICLES
+  //GET /API/ALL ARTICLES
   describe("GET/api/articles - Display Array of article objects", () => {
     it("200: GET responds with an array of article objects, each of which to have appropriate properties", () => {
       return request(app)
@@ -88,7 +88,7 @@ describe("API", () => {
     });
   });
 
-  //GET ARTICLE BY ID
+  //GET ARTICLE BY ID - Includes comment count
   describe("Get /api/articles/:article_id", () => {
     it("200: should respond with the specified article object", () => {
       return request(app)
@@ -112,4 +112,18 @@ describe("API", () => {
         });
     });
   });
-}); //End Describe API bracket Root
+
+  //ERROR 404 WITH VALID PATH BUT NON EXISTENT ID
+  describe("Tests for Sad Path Article ID", () => {
+    it.only("404: should return a message saying ID not found when given an ID that does not exist in the data set", () => {
+      return request(app)
+        .get("/api/articles/103")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("ID not found!");
+        });
+    });
+  });
+
+  //ERROR 400 WHEN GIVEN INVALID ARTICLE_ID = "Invalid Input"
+}); //End Describe API bracket

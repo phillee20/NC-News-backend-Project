@@ -25,13 +25,9 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id", getArticleID);
 
 //ERROR HANDLING
-app.get("/api/*", (request, response) => {
-  response.status(404).send({ msg: "Error(404) - Invalid Path!" });
-});
-
-app.use(handle404nonExistentPaths);
-app.use(handleServerErrors);
-app.use(handlePsqlErrors);
+app.all("/api/*", handle404nonExistentPaths);
 app.use(handleCustomErrors);
+app.use(handlePsqlErrors);
+app.use(handleServerErrors);
 
 module.exports = app;
