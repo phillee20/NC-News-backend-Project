@@ -27,7 +27,7 @@ describe("API", () => {
   });
 
   //GET API/TOPICS
-  describe("GET/api/topics - Display Array of topics objects", () => {
+  describe("GET/api/topics - Display an Array of topics objects", () => {
     it("200: Should respond with an array of topics objects, each of which to have slug and description property", () => {
       return request(app)
         .get("/api/topics")
@@ -48,7 +48,7 @@ describe("API", () => {
   });
 
   //404 ERROR PATH
-  describe("Error Invalid Path", () => {
+  describe("Test for 404 Error - /api/Invalid Path", () => {
     it("404: GET responds with error - Invalid Path!", () => {
       return request(app)
         .get("/api/invalidPath")
@@ -60,13 +60,12 @@ describe("API", () => {
   });
 
   //GET /API/ALL ARTICLES
-  describe("GET/api/articles - Display Array of article objects", () => {
+  describe("GET/api/articles - Display an Array of article objects", () => {
     it("200: GET responds with an array of article objects, each of which to have appropriate properties", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
         .then(({ body }) => {
-          //console.log(body);
           expect(body.articles).toBeInstanceOf(Array);
           expect(body.articles).toHaveLength(12);
           expect(body.articles).toBeSortedBy("created_at", {
@@ -89,7 +88,7 @@ describe("API", () => {
   });
 
   //GET ARTICLE BY ID - Includes comment count
-  describe("Get /api/articles/:article_id", () => {
+  describe("GET /api/articles/:article_id, includes comment count property", () => {
     it("200: should respond with the specified article object", () => {
       return request(app)
         .get("/api/articles/5")
@@ -128,6 +127,68 @@ describe("API", () => {
     it("400: should return a message saying invalid Input when given an invalid ID", () => {
       return request(app)
         .get("/api/articles/doritos")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("400: Invalid Input!");
+        });
+    });
+  });
+
+  //GET AN ARRAY OF COMMENTS FROM SPECIFIC ARTICLE ID
+  describe("GET an array of comments for the given article ID", () => {
+    it("200: should respond with an array of Comments objects relating to the specified article ID", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments).toBeInstanceOf(Array);
+          expect(response.body.comments).toHaveLength(11);
+          expect(response.body.comments).toBeSortedBy("created_at", {
+            descending: true,
+            coerce: false,
+          });
+          response.body.comments.forEach((comment) => {
+            expect(comment).toEqual(
+              expect.objectContaining({
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+                article_id: expect.any(Number),
+              })
+            );
+          });
+        });
+    });
+
+    //GET AN EMPTY ARRAY WHEN GIVEN AN ARTICLE ID WITH NO COMMENTS
+    it("200: should return an empty array when given an article ID that has no comments ", () => {
+      return request(app)
+        .get("/api/articles/4/comments")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments).toEqual([]);
+        });
+    });
+  });
+
+  //ERROR 404 WHEN GIVEN NON EXISTENT ARTICLE ID TO COMMENTS PATH
+  describe("Tests for Sad path to the Comments path", () => {
+    it("404: should respond with a 404 error when given a non existent article ID for comments", () => {
+      return request(app)
+        .get("/api/articles/888/comments")
+        .expect(404)
+        .then(({ body }) => {
+          //console.log(body, "BODY!");
+          expect(body.msg).toBe("ID not found!");
+        });
+    });
+
+    //400 ERROR WHEN GIVEN INVALID PATH IN COMMENTS PATH
+    it("400: should respond with a 400 error - Invalid Input when given a non valid path", () => {
+      return request(app)
+        .get("/api/articles/invalidWord/comments")
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("400: Invalid Input!");

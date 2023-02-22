@@ -1,4 +1,9 @@
-const { fetchTopics, fetchAllArticles, fetchArticleByID } = require("./models");
+const {
+  fetchTopics,
+  fetchAllArticles,
+  fetchArticleByID,
+  fetchArticleComments,
+} = require("./models");
 
 const getAPI = (request, response) => {
   return response
@@ -12,7 +17,6 @@ const getAPI = (request, response) => {
 const getTopics = (request, response, next) => {
   fetchTopics()
     .then((topics) => {
-      //console.log(topics);
       return response.status(200).send({ topics });
     })
     .catch((err) => {
@@ -41,4 +45,25 @@ const getArticleID = (request, response, next) => {
     });
 };
 
-module.exports = { getAPI, getTopics, getAllArticles, getArticleID };
+const getArticleComments = (request, response, next) => {
+  const { article_id } = request.params;
+  fetchArticleByID(article_id)
+    .then((result) => {
+      return fetchArticleComments(article_id);
+    })
+    .then((comments) => {
+      console.log(comments);
+      response.status(200).send({ comments });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+module.exports = {
+  getAPI,
+  getTopics,
+  getAllArticles,
+  getArticleID,
+  getArticleComments,
+};

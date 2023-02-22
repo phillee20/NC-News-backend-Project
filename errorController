@@ -13,7 +13,7 @@ const handlePsqlErrors = (error, request, response, next) => {
 };
 
 const handleServerErrors = (error, request, response, next) => {
-  console.log(error, "server error");
+  //console.log(error);
   response.status(500).send({ msg: "500 - Internal Server Error!!" });
 };
 
