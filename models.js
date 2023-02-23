@@ -95,7 +95,7 @@ const postComment = (article_id, body, username) => {
     });
 };
 
-const patchVotes = (article_id, newVote) => {
+const patchVotes = (article_id, body) => {
   return db
     .query(
       `
@@ -103,10 +103,10 @@ const patchVotes = (article_id, newVote) => {
   SET votes = $1
   WHERE article_id = $2
   RETURNING *;`,
-      [newVote, article_id]
+      [body, article_id]
     )
     .then((result) => {
-      console.log(result);
+      console.log(result.rows[0]);
       //return result.rows;
     });
 };

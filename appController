@@ -82,10 +82,15 @@ const postArticleComments = (request, response, next) => {
 const updateVotes = (request, response, next) => {
   const { article_id } = request.params;
   const { body } = request.params;
-  const { newVote } = request.params;
-  patchVotes().then((updatedVote) => {
-    response.status(200).send({ updatedVote });
-  });
+  //const { newVote } = request.params;
+  patchVotes(article_id, body)
+    .then((updatedVote) => {
+      //console.log(updatedVote);
+      response.status(200).send({ updatedVote });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
 
 module.exports = {
