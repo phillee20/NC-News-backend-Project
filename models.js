@@ -95,6 +95,22 @@ const postComment = (article_id, body, username) => {
     });
 };
 
+const patchVotes = (article_id, newVote) => {
+  return db
+    .query(
+      `
+  UPDATE articles 
+  SET votes = $1
+  WHERE article_id = $2
+  RETURNING *;`,
+      [newVote, article_id]
+    )
+    .then((result) => {
+      console.log(result);
+      //return result.rows;
+    });
+};
+
 module.exports = {
   fetchTopics,
   fetchAllArticles,
@@ -102,4 +118,5 @@ module.exports = {
   fetchArticleComments,
   postComment,
   checkUsernameExist,
+  patchVotes,
 };
