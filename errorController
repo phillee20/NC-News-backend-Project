@@ -8,12 +8,14 @@ const handleCustomErrors = (error, request, response, next) => {
 
 const handlePsqlErrors = (error, request, response, next) => {
   if (error.code === "22P02") {
-    response.status(400).send({ msg: "400: Invalid Input!" });
+    response.status(400).send({ msg: "400 Bad Request - Not a Valid ID!" });
+  } else if (error.code === "23503") {
+    response.status(404).send({ msg: "Unable to find ID!" });
   } else next(error);
 };
 
 const handleServerErrors = (error, request, response, next) => {
-  //console.log(error);
+  console.log(error);
   response.status(500).send({ msg: "500 - Internal Server Error!!" });
 };
 

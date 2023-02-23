@@ -14,7 +14,7 @@ afterAll(() => {
 });
 
 //GET API
-describe("API", () => {
+describe("GET", () => {
   describe("GET/api", () => {
     it("200: Should get a response message saying successful", () => {
       return request(app)
@@ -129,7 +129,7 @@ describe("API", () => {
         .get("/api/articles/doritos")
         .expect(400)
         .then(({ body }) => {
-          expect(body.msg).toBe("400: Invalid Input!");
+          expect(body.msg).toBe("400 Bad Request - Not a Valid ID!");
         });
     });
   });
@@ -165,7 +165,7 @@ describe("API", () => {
     //GET AN EMPTY ARRAY WHEN GIVEN AN ARTICLE ID WITH NO COMMENTS
     it("200: should return an empty array when given an article ID that has no comments ", () => {
       return request(app)
-        .get("/api/articles/4/comments")
+        .get("/api/articles/4/comments") //Q - Why is 4 not showing as invalid, as 888?
         .expect(200)
         .then((response) => {
           expect(response.body.comments).toEqual([]);
@@ -186,13 +186,110 @@ describe("API", () => {
     });
 
     //400 ERROR WHEN GIVEN INVALID PATH IN COMMENTS PATH
-    it("400: should respond with a 400 error - Invalid Input when given a non valid path", () => {
+    it("400: should respond with a 400 error - Invalid ID when given a non valid path", () => {
       return request(app)
         .get("/api/articles/invalidWord/comments")
         .expect(400)
         .then(({ body }) => {
-          expect(body.msg).toBe("400: Invalid Input!");
+          expect(body.msg).toBe("400 Bad Request - Not a Valid ID!");
         });
     });
   });
-}); //End Describe API bracket
+}); //End Describe API/GET bracket
+
+describe("POST METHOD", () => {
+  describe("POST method for posting the comment made by the client", () => {
+    it("201: should respond with the posted comment made by the client which means it is a successful post", () => {
+      //arrange
+      const newComment = {
+        username: "lurker",
+        body: "Testing new comment is posted!",
+      };
+
+      return request(app)
+        .post("/api/articles/6/comments")
+        .send(newComment)
+        .expect(201)
+        .then((response) => {
+          //console.log(response.body, "HERE");
+          expect(response.body.postedComment).toEqual(
+            expect.objectContaining({
+              comment_id: 19,
+              body: "Testing new comment is posted!",
+              article_id: 6,
+              author: "lurker",
+              votes: 0,
+              created_at: expect.any(String),
+            })
+          );
+        });
+    });
+  });
+
+  //ERROR 400 - POST WITH USERNAME THAT DOES NOT EXIST
+  describe("Sad Paths for POST Method", () => {
+    it("400: Post with username that does not exist - should respond with Status 400 - ", () => {
+      //arrange
+      const newComment = {
+        username: "Phil",
+        body: "Testing new comment for sad path",
+      };
+
+      return request(app)
+        .post("/api/articles/4/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Post Request!");
+        });
+    });
+
+    //ERROR 404 POST WITHOUT USERNAME AND BODY CONTENT
+    it("400: Post with empty comment - should respond with Status 400 - ", () => {
+      //arrange
+      const newComment = {};
+
+      return request(app)
+        .post("/api/articles/8/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Post Request!");
+        });
+    });
+
+    //ERROR 404 - POST WITH VALID BUT NON EXISTENT ARTICLE ID
+    it("404: Post with a valid ID but it is not an existent ID", () => {
+      //arrange
+      const newComment = {
+        username: "butter_bridge",
+        body: "This is a valid but non existent Article ID",
+      };
+
+      return request(app)
+        .post("/api/articles/520/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Unable to find ID!");
+        });
+    });
+
+    //POST WITH INVALID ARTICLE ID GIVES ERROR 400 - BAD REQUEST
+    it("400: Post with an invalid ID and returns 400 Bad Request", () => {
+      //arrange
+      const newComment = {
+        username: "butter_bridge",
+        body: "This is an invalid Article ID with the word banana",
+      };
+
+      return request(app)
+        .post("/api/articles/bananas/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("400 Bad Request - Not a Valid ID!");
+        });
+    });
+  });
+});

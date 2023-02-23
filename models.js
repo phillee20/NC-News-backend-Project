@@ -41,6 +41,28 @@ const fetchArticleByID = (article_id) => {
     });
 };
 
+const checkUsernameExist = (username) => {
+  return db
+    .query(`SELECT * FROM users WHERE username = $1`, [username])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 400, msg: "Invalid Post Request!" });
+      }
+    });
+};
+
+/*
+const checkArticleExist = (article_id) => {
+  return db
+    .query(`SELECT * FROM articles WHERE articles = $1`, [article_id])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Unable to find ID!" });
+      }
+    });
+};
+*/
+
 const fetchArticleComments = (article_id) => {
   return db
     .query(
@@ -55,9 +77,29 @@ const fetchArticleComments = (article_id) => {
     });
 };
 
+const postComment = (article_id, body, username) => {
+  if (username === undefined || body === undefined) {
+    return Promise.reject({ status: 400, msg: "Invalid Post Request!" });
+  }
+  return db
+    .query(
+      `
+    INSERT INTO comments (author, body, article_id)
+    VALUES ($1, $2, $3)
+    RETURNING *; 
+    `,
+      [username, body, article_id]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
+
 module.exports = {
   fetchTopics,
   fetchAllArticles,
   fetchArticleByID,
   fetchArticleComments,
+  postComment,
+  checkUsernameExist,
 };

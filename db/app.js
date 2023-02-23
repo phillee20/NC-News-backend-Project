@@ -15,6 +15,7 @@ const {
   getAllArticles,
   getArticleID,
   getArticleComments,
+  postArticleComments,
 } = require("../appController");
 
 app.get("/api", getAPI);
@@ -26,6 +27,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id", getArticleID);
 
 app.get("/api/articles/:article_id/comments", getArticleComments);
+
+app.post("/api/articles/:article_id/comments", postArticleComments);
 
 //ERROR HANDLING
 app.all("*", handle404nonExistentPaths);

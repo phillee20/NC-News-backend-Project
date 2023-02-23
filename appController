@@ -1,16 +1,19 @@
+const { post } = require("./db/app");
 const {
   fetchTopics,
   fetchAllArticles,
   fetchArticleByID,
   fetchArticleComments,
+  postComment,
+  checkUsernameExist,
 } = require("./models");
 
 const getAPI = (request, response) => {
   return response
     .status(200)
     .send({ msg: "We have connected successfully" })
-    .catch((err) => {
-      next(err);
+    .catch((error) => {
+      next(error);
     });
 };
 
@@ -19,8 +22,8 @@ const getTopics = (request, response, next) => {
     .then((topics) => {
       return response.status(200).send({ topics });
     })
-    .catch((err) => {
-      next(err);
+    .catch((error) => {
+      next(error);
     });
 };
 
@@ -29,8 +32,8 @@ const getAllArticles = (request, response, next) => {
     .then((allArticle) => {
       response.status(200).send({ articles: allArticle });
     })
-    .catch((err) => {
-      next(err);
+    .catch((error) => {
+      next(error);
     });
 };
 
@@ -52,8 +55,24 @@ const getArticleComments = (request, response, next) => {
       return fetchArticleComments(article_id);
     })
     .then((comments) => {
-      console.log(comments);
+      //console.log(comments);
       response.status(200).send({ comments });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+const postArticleComments = (request, response, next) => {
+  const { article_id } = request.params;
+  const { body } = request.body;
+  const { username } = request.body;
+  checkUsernameExist(username)
+    .then(() => {
+      return postComment(article_id, body, username);
+    })
+    .then((postedComment) => {
+      response.status(201).send({ postedComment });
     })
     .catch((error) => {
       next(error);
@@ -66,4 +85,5 @@ module.exports = {
   getAllArticles,
   getArticleID,
   getArticleComments,
+  postArticleComments,
 };
