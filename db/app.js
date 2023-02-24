@@ -17,6 +17,7 @@ const {
   getArticleComments,
   postArticleComments,
   updateVotes,
+  getUsers,
 } = require("../appController");
 
 app.get("/api", getAPI);
@@ -28,6 +29,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id", getArticleID);
 
 app.get("/api/articles/:article_id/comments", getArticleComments);
+
+app.get("/api/users", getUsers);
 
 app.post("/api/articles/:article_id/comments", postArticleComments);
 

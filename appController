@@ -6,15 +6,11 @@ const {
   postComment,
   checkUsernameExist,
   patchVotes,
+  fetchUsers,
 } = require("./models");
 
-const getAPI = (request, response) => {
-  return response
-    .status(200)
-    .send({ msg: "We have connected successfully" })
-    .catch((error) => {
-      next(error);
-    });
+const getAPI = (request, response, next) => {
+  return response.status(200).send({ msg: "We have connected successfully" });
 };
 
 const getTopics = (request, response, next) => {
@@ -94,6 +90,13 @@ const updateVotes = (request, response, next) => {
     });
 };
 
+const getUsers = (request, response, next) => {
+  //console.log("Hello");
+  fetchUsers().then((users) => {
+    response.status(200).send({ users });
+  });
+};
+
 module.exports = {
   getAPI,
   getTopics,
@@ -102,4 +105,5 @@ module.exports = {
   getArticleComments,
   postArticleComments,
   updateVotes,
+  getUsers,
 };
