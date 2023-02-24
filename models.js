@@ -95,19 +95,20 @@ const postComment = (article_id, body, username) => {
     });
 };
 
-const patchVotes = (article_id, body) => {
+const patchVotes = (article_id, inc_votes) => {
+  //console.log(body);
   return db
     .query(
       `
   UPDATE articles 
-  SET votes = $1
+  SET votes = votes + $1
   WHERE article_id = $2
   RETURNING *;`,
-      [body, article_id]
+      [inc_votes, article_id]
     )
     .then((result) => {
-      console.log(result.rows[0]);
-      //return result.rows;
+      //console.log(result.rows[0]);
+      return result.rows[0];
     });
 };
 

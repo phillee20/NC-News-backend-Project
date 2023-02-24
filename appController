@@ -81,9 +81,10 @@ const postArticleComments = (request, response, next) => {
 
 const updateVotes = (request, response, next) => {
   const { article_id } = request.params;
-  const { body } = request.params;
+  const { inc_votes } = request.body;
+  //console.log(inc_votes);
   //const { newVote } = request.params;
-  patchVotes(article_id, body)
+  patchVotes(article_id, inc_votes)
     .then((updatedVote) => {
       //console.log(updatedVote);
       response.status(200).send({ updatedVote });

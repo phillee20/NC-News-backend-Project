@@ -296,22 +296,22 @@ describe("POST METHOD", () => {
 
 describe("PATCH METHOD", () => {
   describe("PATCH method for updating the votes value and responds with the updated article", () => {
-    it.skip("200 - Should update the vote value with the NEW vote value provided by the user", () => {
+    it("200 - Should update the vote value with the NEW vote value provided by the user", () => {
       const newVote = { inc_votes: 5 };
       return request(app)
         .patch("/api/articles/5")
         .send(newVote)
         .expect(200)
         .then((response) => {
-          //console.log(response.body, "REsPONSE");
-          expect(response.body.articles).toEqual(
+          console.log(response.body, "REsPONSE");
+          expect(response.body.updatedVote).toEqual(
             expect.objectContaining({
               article_id: 5,
               title: "UNCOVERED: catspiracy to bring down democracy",
               topic: "cats",
               author: "rogersop",
               body: "Bastet walks amongst us, and the cats are taking arms!",
-              created_at: 596464040000,
+              created_at: expect.any(String),
               votes: 5,
               article_img_url:
                 "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
@@ -321,4 +321,8 @@ describe("PATCH METHOD", () => {
     });
   });
 });
+
+//RESPONDS WITH 400 BAD REQUEST ERROR WHEN GIVEN INVALID ARTICLE ID - BANANAS
+//RESPONDS WITH 404 ERROR WHEN GIVEN VALID BUT NOT EXISTENT ID
+//RESPONDS WITH 400 ERROR WHEN GIVEN EMPTY OBJECT
 //END OF PATCH BLOCK
