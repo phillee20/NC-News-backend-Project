@@ -16,6 +16,7 @@ const {
   getArticleID,
   getArticleComments,
   postArticleComments,
+  updateVotes,
 } = require("../appController");
 
 app.get("/api", getAPI);
@@ -29,6 +30,8 @@ app.get("/api/articles/:article_id", getArticleID);
 app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.post("/api/articles/:article_id/comments", postArticleComments);
+
+app.patch("/api/articles/:article_id", updateVotes);
 
 //ERROR HANDLING
 app.all("*", handle404nonExistentPaths);

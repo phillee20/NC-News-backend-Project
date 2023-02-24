@@ -1,4 +1,3 @@
-const { post } = require("./db/app");
 const {
   fetchTopics,
   fetchAllArticles,
@@ -6,6 +5,7 @@ const {
   fetchArticleComments,
   postComment,
   checkUsernameExist,
+  patchVotes,
 } = require("./models");
 
 const getAPI = (request, response) => {
@@ -79,6 +79,21 @@ const postArticleComments = (request, response, next) => {
     });
 };
 
+const updateVotes = (request, response, next) => {
+  const { article_id } = request.params;
+  const { inc_votes } = request.body;
+  fetchArticleByID(article_id)
+    .then(() => {
+      return patchVotes(article_id, inc_votes);
+    })
+    .then((updatedVote) => {
+      response.status(200).send({ updatedVote });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
 module.exports = {
   getAPI,
   getTopics,
@@ -86,4 +101,5 @@ module.exports = {
   getArticleID,
   getArticleComments,
   postArticleComments,
+  updateVotes,
 };
