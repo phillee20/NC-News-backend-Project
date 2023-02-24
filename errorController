@@ -11,6 +11,8 @@ const handlePsqlErrors = (error, request, response, next) => {
     response.status(400).send({ msg: "400 Bad Request - Not a Valid ID!" });
   } else if (error.code === "23503") {
     response.status(404).send({ msg: "Unable to find ID!" });
+  } else if (error.code === "23502") {
+    response.status(400).send({ msg: "400 Bad Request!" });
   } else next(error);
 };
 

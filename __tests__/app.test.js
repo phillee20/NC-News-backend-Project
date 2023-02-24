@@ -14,7 +14,7 @@ afterAll(() => {
 });
 
 //GET API
-describe("GET", () => {
+describe("GET METHODS", () => {
   describe("GET/api", () => {
     it("200: Should get a response message saying successful", () => {
       return request(app)
@@ -27,7 +27,7 @@ describe("GET", () => {
   });
 
   //GET API/TOPICS
-  describe("GET/api/topics - Display an Array of topics objects", () => {
+  describe("GET/api/topics - Display an array of topics objects", () => {
     it("200: Should respond with an array of topics objects, each of which to have slug and description property", () => {
       return request(app)
         .get("/api/topics")
@@ -48,8 +48,8 @@ describe("GET", () => {
   });
 
   //404 ERROR PATH
-  describe("Test for 404 Error - /api/Invalid Path", () => {
-    it("404: GET responds with error - Invalid Path!", () => {
+  describe("Test for 404 error - /api/invalid path", () => {
+    it("404: GET responds with error - invalid path!", () => {
       return request(app)
         .get("/api/invalidPath")
         .expect(404)
@@ -60,7 +60,7 @@ describe("GET", () => {
   });
 
   //GET /API/ALL ARTICLES
-  describe("GET/api/articles - Display an Array of article objects", () => {
+  describe("GET/api/articles - Display an array of article objects", () => {
     it("200: GET responds with an array of article objects, each of which to have appropriate properties", () => {
       return request(app)
         .get("/api/articles")
@@ -88,7 +88,7 @@ describe("GET", () => {
   });
 
   //GET ARTICLE BY ID - Includes comment count
-  describe("GET /api/articles/:article_id, includes comment count property", () => {
+  describe("GET/api/articles/:article_id, includes comment count property", () => {
     it("200: should respond with the specified article object", () => {
       return request(app)
         .get("/api/articles/5")
@@ -113,7 +113,7 @@ describe("GET", () => {
   });
 
   //ERROR 404 WHEN GIVEN NON EXISTENT ID
-  describe("Tests for Sad Path Article ID", () => {
+  describe("Tests for sad path article ID", () => {
     it("404: should return a message saying ID not found when given an ID that does not exist in the data set", () => {
       return request(app)
         .get("/api/articles/103")
@@ -174,7 +174,7 @@ describe("GET", () => {
   });
 
   //ERROR 404 WHEN GIVEN NON EXISTENT ARTICLE ID TO COMMENTS PATH
-  describe("Tests for Sad path to the Comments path", () => {
+  describe("Tests for sad path to the comments path", () => {
     it("404: should respond with a 404 error when given a non existent article ID for comments", () => {
       return request(app)
         .get("/api/articles/888/comments")
@@ -186,7 +186,7 @@ describe("GET", () => {
     });
 
     //400 ERROR WHEN GIVEN INVALID PATH IN COMMENTS PATH
-    it("400: should respond with a 400 error - Invalid ID when given a non valid path", () => {
+    it("400: Should respond with a 400 error - Invalid ID when given a non valid path", () => {
       return request(app)
         .get("/api/articles/invalidWord/comments")
         .expect(400)
@@ -197,7 +197,7 @@ describe("GET", () => {
   });
 }); //End Describe API/GET bracket
 
-describe("POST METHOD", () => {
+describe("POST METHODS", () => {
   describe("POST method for posting the comment made by the client", () => {
     it("201: should respond with the posted comment made by the client which means it is a successful post", () => {
       //arrange
@@ -227,7 +227,7 @@ describe("POST METHOD", () => {
   });
 
   //ERROR 400 - POST WITH USERNAME THAT DOES NOT EXIST
-  describe("Sad Paths for POST Method", () => {
+  describe("Test for Errors to POST Method", () => {
     it("400: Post with username that does not exist - should respond with Status 400 - ", () => {
       //arrange
       const newComment = {
@@ -276,7 +276,7 @@ describe("POST METHOD", () => {
     });
 
     //POST WITH INVALID ARTICLE ID GIVES ERROR 400 - BAD REQUEST
-    it("400: Post with an invalid ID and returns 400 Bad Request", () => {
+    it("400: Post with an invalid ID and returns 400 bad request", () => {
       //arrange
       const newComment = {
         username: "butter_bridge",
@@ -303,7 +303,6 @@ describe("PATCH METHOD", () => {
         .send(newVote)
         .expect(200)
         .then((response) => {
-          console.log(response.body, "REsPONSE");
           expect(response.body.updatedVote).toEqual(
             expect.objectContaining({
               article_id: 5,
@@ -319,10 +318,79 @@ describe("PATCH METHOD", () => {
           );
         });
     });
-  });
-});
 
-//RESPONDS WITH 400 BAD REQUEST ERROR WHEN GIVEN INVALID ARTICLE ID - BANANAS
-//RESPONDS WITH 404 ERROR WHEN GIVEN VALID BUT NOT EXISTENT ID
-//RESPONDS WITH 400 ERROR WHEN GIVEN EMPTY OBJECT
-//END OF PATCH BLOCK
+    //UPDATE WITH DECREMENT VALUE
+    it("200 - Should update the (negative) vote value with the NEW vote value provided by the user", () => {
+      const newVote = { inc_votes: -100 };
+      return request(app)
+        .patch("/api/articles/5")
+        .send(newVote)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.updatedVote).toEqual(
+            expect.objectContaining({
+              article_id: 5,
+              title: "UNCOVERED: catspiracy to bring down democracy",
+              topic: "cats",
+              author: "rogersop",
+              body: "Bastet walks amongst us, and the cats are taking arms!",
+              created_at: expect.any(String),
+              votes: -100,
+              article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            })
+          );
+        });
+    });
+  });
+
+  describe("Test for Errors to Patch Methods", () => {
+    //RESPONDS WITH 400 BAD REQUEST ERROR WHEN GIVEN INVALID ARTICLE ID - BANANAS
+    it("400: should respond with a bad request when given an invalid ID - ie. String", () => {
+      const newVote = { inc_votes: 33 };
+      return request(app)
+        .patch("/api/articles/bananas")
+        .send(newVote)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("400 Bad Request - Not a Valid ID!");
+        });
+    });
+
+    //RESPONDS WITH 404 ERROR WHEN GIVEN VALID BUT NOT EXISTENT ID
+    it("404: should respond with an error given a valid but not existent ID ", () => {
+      const newVote = { inc_votes: 20 };
+      return request(app)
+        .patch("/api/articles/67")
+        .send(newVote)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("ID not found!");
+        });
+    });
+
+    //RESPONDS WITH 400 BAD REQUEST IF GIVEN INCORRECT FORMAT
+    it("400: should respond with an error when inc_votes is in different format ", () => {
+      const newVote = { different_votes: 20 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(newVote)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("400 Bad Request!");
+        });
+    });
+
+    //RESPONDS WITH 400 BAD REQUEST IF GIVEN INCORRECT FORMAT - EMPTY OBJECT
+    it("400: should respond with an error when inc_votes is in different format ", () => {
+      const newVote = {};
+      return request(app)
+        .patch("/api/articles/1")
+        .send(newVote)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("400 Bad Request!");
+        });
+    });
+  });
+}); //END OF PATCH BLOCK
