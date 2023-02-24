@@ -394,7 +394,6 @@ describe("PATCH METHOD", () => {
     });
   });
 }); //END OF PATCH BLOCK
-
 //GET API USERS
 describe("GET/API/USERS", () => {
   describe("GET an array of objects of Users with appropriate properties and values", () => {
@@ -405,6 +404,7 @@ describe("GET/API/USERS", () => {
         .expect(({ body }) => {
           //console.log(body, "here");
           expect(body.users).toBeInstanceOf(Array);
+          expect(body.users).toHaveLength(4);
           body.users.forEach((user) => {
             expect(user).toEqual(
               expect.objectContaining({
@@ -423,6 +423,7 @@ describe("GET/API/USERS", () => {
         .get("/api/users")
         .expect(200)
         .expect(({ body }) => {
+          expect(body.users).toHaveLength(4);
           body.users.forEach((user) => {
             expect(user).toHaveProperty("username");
             expect(user).toHaveProperty("name");
