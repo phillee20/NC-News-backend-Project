@@ -394,3 +394,41 @@ describe("PATCH METHOD", () => {
     });
   });
 }); //END OF PATCH BLOCK
+
+//GET API USERS
+describe("GET/API/USERS", () => {
+  describe("GET an array of objects of Users with appropriate properties and values", () => {
+    it("200: Should respond with the users and its properties and values in correct data type", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .expect(({ body }) => {
+          //console.log(body, "here");
+          expect(body.users).toBeInstanceOf(Array);
+          body.users.forEach((user) => {
+            expect(user).toEqual(
+              expect.objectContaining({
+                username: expect.any(String),
+                name: expect.any(String),
+                avatar_url: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+
+    //TEST USERS WITH CORRECT PROPERTIES
+    it("200: Should test that each user has the correct properties", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .expect(({ body }) => {
+          body.users.forEach((user) => {
+            expect(user).toHaveProperty("username");
+            expect(user).toHaveProperty("name");
+            expect(user).toHaveProperty("avatar_url");
+          });
+        });
+    });
+  });
+}); //END OF GET USERS BLOCK

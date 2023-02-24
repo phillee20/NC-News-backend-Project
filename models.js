@@ -112,6 +112,19 @@ const patchVotes = (article_id, inc_votes) => {
     });
 };
 
+const fetchUsers = () => {
+  return db
+    .query(
+      `
+    SELECT * FROM users;
+    `
+    )
+    .then((result) => {
+      //console.log(result);
+      return result.rows;
+    });
+};
+
 module.exports = {
   fetchTopics,
   fetchAllArticles,
@@ -120,4 +133,5 @@ module.exports = {
   postComment,
   checkUsernameExist,
   patchVotes,
+  fetchUsers,
 };
