@@ -1,9 +1,9 @@
 {
   "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
+    "description": "Serves up a json representation of all the available endpoints of the api"
   },
   "GET /api/topics": {
-    "description": "serves an array of all topics",
+    "description": "Serves an array of all topics",
     "queries": [],
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
@@ -20,6 +20,85 @@
           "author": "weegembump",
           "body": "Text from the article..",
           "created_at": 1527695953341
+        }
+      ]
+    }
+  }, 
+  "GET /api/articles/:article_id": {
+    "description": "serves an array of a specific article ID",
+    "queries": ["author", "topic", "sort_by", "order"],
+    "exampleResponse": {
+      "articles": [
+        {
+        "title": "Living in the shadow of a great man",
+        "topic": "mitch",
+        "author": "butter_bridge",
+        "body": "I find this existence challenging",
+        "created_at": 1594329060000,
+        "votes": 100,
+        "article_img_url":
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        }
+      ]
+    }
+  }, 
+  "GET /api/articles/:article_id/comments": {
+    "description": "Serves an array of a specific article IDs comments",
+    "queries": ["author", "topic", "sort_by", "order"],
+    "exampleResponse": {
+      "articles": [
+        {
+          "votes": 50,
+          "created_at": 1594329060000,
+          "author": "Lurker",
+          "body": "I find this existence challenging"
+        }
+      ]
+    }
+  }, 
+  "GET /api/users": {
+    "description": "Serves an array of object of all the users",
+    "queries": ["username"],
+    "exampleResponse": {
+      "articles": [
+        {
+          "username": "butter_bridge",
+          "name": "jonny",
+          "avatar_url":
+          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      ]
+    }
+  }, 
+  "POST /api/articles/:article_id/comments": {
+    "description": "Post method for posting the comment made by the client",
+    "queries": ["comment_id", "comment"],
+    "exampleResponse": {
+      "articles": [
+        {
+        "body": "Testing new comment is posted!",
+        "article_id": 6,
+        "author": "lurker",
+        "votes": 0,
+        "created_at": "93793739400282"
+        }
+      ]
+    }
+  }, 
+  "PATCH /api/articles/:article_id": {
+    "description": "Patch method for posting the comment made by the client",
+    "queries": ["article"],
+    "exampleResponse": {
+      "articles": [
+        {
+        "title": "UNCOVERED: catspiracy to bring down democracy",
+        "topic": "cats",
+        "author": "rogersop",
+        "body": "Bastet walks amongst us, and the cats are taking arms!",
+        "created_at": 4903743904730,
+        "votes": -100,
+        "article_img_url":
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         }
       ]
     }

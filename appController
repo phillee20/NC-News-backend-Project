@@ -9,8 +9,10 @@ const {
   fetchUsers,
 } = require("./models");
 
+const endPoints = require("./endpoints.json");
+
 const getAPI = (request, response, next) => {
-  return response.status(200).send({ msg: "We have connected successfully" });
+  return response.status(200).send(endPoints);
 };
 
 const getTopics = (request, response, next) => {
