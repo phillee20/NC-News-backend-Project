@@ -3,6 +3,7 @@ const app = require("../db/app");
 const data = require("../db/data/test-data/index");
 const connection = require("../db/connection");
 const seed = require("../db/seeds/seed");
+const endPoints = require("../endpoints.json");
 require("jest-sorted");
 
 beforeEach(() => {
@@ -16,12 +17,12 @@ afterAll(() => {
 //GET API
 describe("GET METHODS", () => {
   describe("GET/api", () => {
-    it("200: Should get a response message saying successful", () => {
+    it("200: Should get a response of the list of JSON endpoints available", () => {
       return request(app)
         .get("/api")
         .expect(200)
         .then((response) => {
-          expect(response.body.msg).toBe("We have connected successfully");
+          expect(response.body).toEqual(endPoints);
         });
     });
   });
