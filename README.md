@@ -11,12 +11,12 @@ To set up, create a local repository using following git clone - https://github.
 
 Then create 2 new files on the root directory, as below
 
-.env.test
-.env.development
+.env.test<br />
+.env.development <br />
 
 Each file should have the respective content below
 
-PGDATABASE=nc_news_test
-PGDATABASE=nc_news
+PGDATABASE=nc_news_test <br />
+PGDATABASE=nc_news <br />
 
 Next, run npm install and it will install a package and dependencies. Running npm install without arguments installs modules defined in the dependencies section of the package.json file.
