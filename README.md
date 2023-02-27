@@ -2,7 +2,10 @@
 
 Overview
 
-We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service which should provide this information to the front end architecture. This project will go through test driven development, where error handling will be thoroughly considered. 
+We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service which should provide this information to the front end architecture. This project will go through test driven development, with error handling thoroughly considered. 
+
+
+""Set Up**
 
 To set up, create a local repository using following git clone - https://github.com/phillee20/NC-News-backend-Project.git
 
